@@ -1,0 +1,51 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+android {
+
+    def globalConfiguration = rootProject.extensions.getByName("ext")
+    compileSdkVersion globalConfiguration.androidCompileSdkVersion
+    buildToolsVersion globalConfiguration.androidBuildToolsVersion
+
+    defaultConfig {
+        applicationId "com.example.shuyu"
+
+        minSdkVersion globalConfiguration.androidMinSdkVersion
+        targetSdkVersion globalConfiguration.androidTargetSdkVersion
+
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    dataBinding {
+        enabled = true
+    }
+
+    kapt {
+        generateStubs = true
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation rootProject.ext.androidDependencies.recyclerView
+    implementation rootProject.ext.androidDependencies.appcompat_v7
+
+    def androidDependencies = rootProject.ext.androidDependencies
+    implementation androidDependencies.kotlin
+    kapt(androidDependencies.kaptKotlin) {
+        exclude group: 'android.arch.lifecycle:runtime'
+    }
+    implementation 'android.arch.lifecycle:runtime:1.1.0'
+    implementation project(':textUtilsLib-kotlin')
+    //implementation 'com.github.CarGuo.RickText:textUtilsLib-kotlin:v2.1.2'
+}

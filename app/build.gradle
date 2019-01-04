@@ -1,0 +1,41 @@
+apply plugin: 'com.android.application'
+
+android {
+
+    def globalConfiguration = rootProject.extensions.getByName("ext")
+    compileSdkVersion globalConfiguration.androidCompileSdkVersion
+    buildToolsVersion globalConfiguration.androidBuildToolsVersion
+
+    defaultConfig {
+        applicationId "com.example.richtext"
+
+        minSdkVersion globalConfiguration.androidMinSdkVersion
+        targetSdkVersion globalConfiguration.androidTargetSdkVersion
+
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    dataBinding {
+        enabled = true
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation rootProject.ext.androidDependencies.recyclerView
+    implementation rootProject.ext.androidDependencies.appcompat_v7
+
+    def viewDependencies = rootProject.ext.viewDependencies
+    annotationProcessor viewDependencies.apt_butterKnife
+    implementation viewDependencies.butterKnife
+    implementation project(':textUtilsLib')
+
+    //implementation 'com.github.CarGuo.RickText:textUtilsLib:v2.1.2'
+}
